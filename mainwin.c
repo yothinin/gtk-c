@@ -69,7 +69,7 @@ static void activate(GtkApplication *app, gpointer user_data){
   GtkWidget *window, *header, *lblClock;
   GtkWidget *button;
   GtkWidget *popover, *vbox;
-
+  
   window = gtk_application_window_new(app);
   //gtk_widget_realize (window);
 
@@ -94,18 +94,22 @@ static void activate(GtkApplication *app, gpointer user_data){
   
   button = gtk_menu_button_new ();
   gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_icon_name ("open-menu-symbolic", GTK_ICON_SIZE_BUTTON));
-  gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
-  gtk_widget_set_halign (button, GTK_ALIGN_CENTER);
+  //gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+  //gtk_widget_set_halign (button, GTK_ALIGN_CENTER);
   gtk_header_bar_pack_end(GTK_HEADER_BAR(header), button);
   
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), gtk_label_new ("แฟ้มข้อมูลหลัก"), FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), gtk_label_new ("กำหนดค่าระบบ"), FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), gtk_label_new ("คู่มือโปรแกรม"), FALSE, FALSE, 0);
+  GtkWidget *btnMenu;
+  btnMenu = gtk_button_new_with_label("แฟ้มข้อมูลหลัก");
+  gtk_box_pack_start(GTK_BOX(vbox), btnMenu, FALSE, FALSE, 0);
+  btnMenu = gtk_button_new_with_label("จัดการระบบ");
+  gtk_box_pack_start(GTK_BOX(vbox), btnMenu, FALSE, FALSE, 0);
   
   popover = gtk_popover_new (button);
   gtk_container_add (GTK_CONTAINER (popover), vbox);
   gtk_menu_button_set_popover (GTK_MENU_BUTTON (button), popover);
+
+  gtk_widget_realize (popover);
   gtk_widget_show_all (popover);
 
   //สร้าง Tool bar 
