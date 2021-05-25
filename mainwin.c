@@ -21,7 +21,7 @@ static void on_shutdown(GtkWidget *widget, gpointer user_data){
   g_application_quit(G_APPLICATION(user_data));
 }
 
-static void createMenu(){
+static void createMenu(GtkWidget *header){
   GtkWidget *pmenu = gtk_menu_new();
   GtkWidget *mnuMaster, *mnuSetting;
   mnuMaster = gtk_menu_item_new_with_label("แฟ้มข้อมูลหลัก");
@@ -68,13 +68,18 @@ static void createToolbar(gpointer win){
 static void activate(GtkApplication *app, gpointer user_data){
   GtkWidget *window, *header, *lblClock;
   GtkWidget *button;
+  GtkWidget *popover, *vbox;
+
   window = gtk_application_window_new(app);
+  //gtk_widget_realize (window);
+
   //gtk_window_set_title(GTK_WINDOW(window), "Meamoo POS");
   gtk_window_set_default_size(GTK_WINDOW(window), 640, 480);
   gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
   g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(on_shutdown), app);
 
   header = gtk_header_bar_new();
+
   gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
   gtk_header_bar_set_decoration_layout(GTK_HEADER_BAR(header),
       "close,maximize,minimize:menu");
@@ -85,12 +90,27 @@ static void activate(GtkApplication *app, gpointer user_data){
 
   gtk_window_set_titlebar(GTK_WINDOW(window), header);
 
-  button = gtk_button_new_from_icon_name("emblem-system-symbolic", GTK_ICON_SIZE_LARGE_TOOLBAR);
+  //button = gtk_button_new_from_icon_name("open-menu-symbolic", GTK_ICON_SIZE_LARGE_TOOLBAR);
+  
+  button = gtk_menu_button_new ();
+  gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_icon_name ("open-menu-symbolic", GTK_ICON_SIZE_BUTTON));
+  gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+  gtk_widget_set_halign (button, GTK_ALIGN_CENTER);
   gtk_header_bar_pack_end(GTK_HEADER_BAR(header), button);
+  
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), gtk_label_new ("แฟ้มข้อมูลหลัก"), FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), gtk_label_new ("กำหนดค่าระบบ"), FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), gtk_label_new ("คู่มือโปรแกรม"), FALSE, FALSE, 0);
+  
+  popover = gtk_popover_new (button);
+  gtk_container_add (GTK_CONTAINER (popover), vbox);
+  gtk_menu_button_set_popover (GTK_MENU_BUTTON (button), popover);
+  gtk_widget_show_all (popover);
 
   //สร้าง Tool bar 
   createToolbar((gpointer)window);
-  createMenu();
+  createMenu(header);
   
   gtk_widget_show_all(window);
 }
