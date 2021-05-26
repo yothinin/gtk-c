@@ -94,16 +94,30 @@ static void activate(GtkApplication *app, gpointer user_data){
   
   button = gtk_menu_button_new ();
   gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_icon_name ("open-menu-symbolic", GTK_ICON_SIZE_BUTTON));
+  //gtk_widget_set_halign (button, GTK_ALIGN_START);
   //gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
-  //gtk_widget_set_halign (button, GTK_ALIGN_CENTER);
   gtk_header_bar_pack_end(GTK_HEADER_BAR(header), button);
   
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-  GtkWidget *btnMenu;
-  btnMenu = gtk_button_new_with_label("แฟ้มข้อมูลหลัก");
+  GtkWidget *btnMenu, *lbl;
+  lbl = gtk_label_new("แฟ้มข้อมูลหลัก");
+  gtk_label_set_xalign(GTK_LABEL(lbl), 0.0); // จัดให้ตัวอักษรอยู่ชิดซ้าย
+  btnMenu = gtk_button_new();
+  gtk_container_add(GTK_CONTAINER(btnMenu), lbl);
   gtk_box_pack_start(GTK_BOX(vbox), btnMenu, FALSE, FALSE, 0);
-  btnMenu = gtk_button_new_with_label("จัดการระบบ");
+
+  lbl = gtk_label_new("จัดการระบบ");
+  gtk_label_set_xalign(GTK_LABEL(lbl), 0.0); // จัดให้ตัวอักษรอยู่ชิดซ้าย
+  btnMenu = gtk_button_new();
+  gtk_container_add(GTK_CONTAINER(btnMenu), lbl);
   gtk_box_pack_start(GTK_BOX(vbox), btnMenu, FALSE, FALSE, 0);
+
+  lbl = gtk_label_new("About");
+  gtk_label_set_xalign(GTK_LABEL(lbl), 0.0); // จัดให้ตัวอักษรอยู่ชิดซ้าย
+  btnMenu = gtk_button_new();
+  gtk_container_add(GTK_CONTAINER(btnMenu), lbl);
+  gtk_box_pack_start(GTK_BOX(vbox), btnMenu, FALSE, FALSE, 0);
+
   
   popover = gtk_popover_new (button);
   gtk_container_add (GTK_CONTAINER (popover), vbox);
