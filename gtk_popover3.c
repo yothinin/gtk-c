@@ -69,6 +69,7 @@ int main (int argc, char *argv[])
   g_signal_connect(G_OBJECT(btn), "clicked", G_CALLBACK(btnClicked), lbl);
 
   lbl = gtk_label_new("ออกจากโปรแกรม");
+  gtk_label_set_xalign(GTK_LABEL(lbl), 0.0);
   btn = gtk_button_new();
   gtk_container_add(GTK_CONTAINER(btn), lbl);
   gtk_button_set_relief(GTK_BUTTON(btn), GTK_RELIEF_NONE);
