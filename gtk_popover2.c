@@ -5,14 +5,15 @@
 
 #include <gtk/gtk.h>
 
-static void clickLabel(gpointer user_data){
-	g_print("Label clicked\n");
+static void btnClicked(GtkWidget *widget, gpointer user_data){
+	const gchar *lbl = gtk_button_get_label(GTK_BUTTON(widget));
+	g_print("Button clicked, %s\n", lbl);
 }
 
 int main (int argc, char *argv[])
 {
   GtkWidget *window;
-  GtkWidget *button, *popover, *vbox, *lbl;
+  GtkWidget *button, *popover, *vbox, *btn;
 
   gtk_init (&argc, &argv);
 
@@ -30,22 +31,31 @@ int main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), button);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-  lbl = gtk_label_new ("แฟ้มข้อมูลหลัก");
-  gtk_label_set_xalign(GTK_LABEL(lbl), 0.0); // จัดให้ตัวอักษรอยู่ชิดซ้าย
-  gtk_box_pack_start (GTK_BOX (vbox), lbl, FALSE, FALSE, 0);
-  g_signal_connect(G_OBJECT(lbl), "clicked", G_CALLBACK(clickLabel), lbl);
+  
+  btn = gtk_button_new_with_label("แฟ้มข้อมูลหลัก");
+  gtk_button_set_relief(GTK_BUTTON(btn), GTK_RELIEF_NONE);
+  gtk_box_pack_start(GTK_BOX(vbox), btn, FALSE, FALSE, 0);
+  g_signal_connect(G_OBJECT(btn), "clicked", G_CALLBACK(btnClicked), NULL);
 
-  lbl = gtk_label_new ("ทำรายการ");
-  gtk_label_set_xalign(GTK_LABEL(lbl), 0.0); // จัดให้ตัวอักษรอยู่ชิดซ้าย
-  gtk_box_pack_start (GTK_BOX (vbox), lbl, FALSE, FALSE, 0);
+  btn = gtk_button_new_with_label("ทำรายการ");
+  gtk_button_set_relief(GTK_BUTTON(btn), GTK_RELIEF_NONE);
+  gtk_box_pack_start(GTK_BOX(vbox), btn, FALSE, FALSE, 0);
+  g_signal_connect(G_OBJECT(btn), "clicked", G_CALLBACK(btnClicked), NULL);
 
-  lbl = gtk_label_new ("รายงาน");
-  gtk_label_set_xalign(GTK_LABEL(lbl), 0.0); // จัดให้ตัวอักษรอยู่ชิดซ้าย
-  gtk_box_pack_start (GTK_BOX (vbox), lbl, FALSE, FALSE, 0);
+  btn = gtk_button_new_with_label("รายงาน");
+  gtk_button_set_relief(GTK_BUTTON(btn), GTK_RELIEF_NONE);
+  gtk_box_pack_start(GTK_BOX(vbox), btn, FALSE, FALSE, 0);
+  g_signal_connect(G_OBJECT(btn), "clicked", G_CALLBACK(btnClicked), NULL);
 
-  lbl = gtk_label_new ("จัดการระบบ");
-  gtk_label_set_xalign(GTK_LABEL(lbl), 0.0); // จัดให้ตัวอักษรอยู่ชิดซ้าย
-  gtk_box_pack_start (GTK_BOX (vbox), lbl, FALSE, FALSE, 0);
+  btn = gtk_button_new_with_label("จัดการระบบ");
+  gtk_button_set_relief(GTK_BUTTON(btn), GTK_RELIEF_NONE);
+  gtk_box_pack_start(GTK_BOX(vbox), btn, FALSE, FALSE, 0);
+  g_signal_connect(G_OBJECT(btn), "clicked", G_CALLBACK(btnClicked), NULL);
+
+  btn = gtk_button_new_with_label("ออกจากโปรแกรม");
+  gtk_button_set_relief(GTK_BUTTON(btn), GTK_RELIEF_NONE);
+  gtk_box_pack_start(GTK_BOX(vbox), btn, FALSE, FALSE, 0);
+  g_signal_connect(G_OBJECT(btn), "clicked", G_CALLBACK(btnClicked), NULL);
 
   popover = gtk_popover_new (button);
   gtk_container_add (GTK_CONTAINER (popover), vbox);
