@@ -1,3 +1,7 @@
+/*
+ * window.c, pupose to create main window and toolbar.
+ */
+
 #include "mainwin.h"
 
 void on_shutdown(GtkWidget *widget, gpointer user_data){
@@ -52,10 +56,10 @@ void activate(GtkApplication *app, gpointer user_data){
   gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_icon_name ("open-menu-symbolic", GTK_ICON_SIZE_BUTTON));
   gtk_header_bar_pack_end(GTK_HEADER_BAR(header), button);
 
-  //สร้าง Popover Menu
+  //สร้าง Popover Menu (menu.c)
   createPopover((gpointer)button);
 
-  //สร้าง Tool bar
+  //สร้าง Tool bar (menu.c)
   createToolbar((gpointer)window);
 
   gtk_widget_show_all(window);

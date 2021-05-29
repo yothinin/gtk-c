@@ -1,3 +1,7 @@
+/*
+ * menu.c, purpose to create menu on functions for menu click.
+ */
+
 #include "mainwin.h"
 
 void onMenuClick(GtkWidget *widget, gpointer user_data){
@@ -62,11 +66,12 @@ void createToolbar(gpointer win){
 
   // สร้างปุ่ม  Home
   home_button = gtk_tool_button_new (NULL, NULL);
-  gtk_tool_button_set_label (GTK_TOOL_BUTTON (home_button), ("_Home"));
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (home_button), ("Home"));
   gtk_tool_button_set_use_underline (GTK_TOOL_BUTTON (home_button), TRUE);
   gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (home_button), "go-home");
   gtk_tool_item_set_is_important (home_button, TRUE);
   gtk_toolbar_insert (GTK_TOOLBAR (tool_bar), home_button, -1);
+  g_signal_connect(G_OBJECT(home_button), "clicked", G_CALLBACK(crateHomeWindow), win);
 
   // สร้างปุ่ม หน้าขาย
   pos_button = gtk_tool_button_new (NULL, NULL);
@@ -75,6 +80,7 @@ void createToolbar(gpointer win){
   gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (pos_button), "accessories-text-editor");
   gtk_tool_item_set_is_important (pos_button, TRUE);
   gtk_toolbar_insert (GTK_TOOLBAR (tool_bar), pos_button, -1);
+  g_signal_connect(G_OBJECT(pos_button), "clicked", G_CALLBACK(crateSaleWindow), win);
 
   // สร้างปุ่ม รายงาน
   rep_button = gtk_tool_button_new (NULL, NULL);
@@ -83,4 +89,5 @@ void createToolbar(gpointer win){
   gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (rep_button), "printer");
   gtk_tool_item_set_is_important (rep_button, TRUE);
   gtk_toolbar_insert (GTK_TOOLBAR (tool_bar), rep_button, -1);
+  g_signal_connect(G_OBJECT(rep_button), "clicked", G_CALLBACK(crateReportWindow), win);
 }

@@ -1,4 +1,3 @@
-#include <gtk/gtk.h>
 #include "mainwin.h"
 
 int main(int argc, char *argv[]){
