@@ -1,79 +1,105 @@
 #include <gtk/gtk.h>
 
-/* This is the callback function. It is a handler function which reacts to the
- * signal. In this case, if the row selected is not the first one of the
- * ComboBox, we write its value in the terminal for the user.
- */
+enum
+{
+  ICON_NAME_COL,
+  TEXT_COL
+};
+
+static GtkTreeModel *
+create_icon_store (void)
+{
+  const gchar *icon_names[5] = {
+    "dialog-warning",
+    "process-stop",
+    "document-new",
+    "edit-clear",
+    "document-open"
+  };
+  const gchar *labels[5] = {
+    "Warning",
+    "Stop",
+    "New",
+    "Clear",
+    "Open"
+  };
+
+  GtkTreeIter iter;
+  GtkListStore *store;
+  gint i;
+
+  store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_STRING);
+
+  for (i = 0; i < G_N_ELEMENTS (icon_names); i++)
+    {
+      if (icon_names[i])
+        {
+          gtk_list_store_append (store, &iter);
+          gtk_list_store_set (store, &iter,
+                              ICON_NAME_COL, icon_names[i],
+                              TEXT_COL, labels[i],
+                              -1);
+        }
+    }
+  return GTK_TREE_MODEL (store);
+}
+
 static void
 on_changed (GtkComboBox *widget,
             gpointer   user_data)
 {
-  GtkComboBox *combo_box = widget;
-
-  if (gtk_combo_box_get_active (combo_box) != 0) {
-    gchar *distro = gtk_combo_box_text_get_active_text (GTK_COMBO_BOX_TEXT(combo_box));
+  
+  
+  
+  //GtkComboBox *combo_box = widget;
+  /*
+  if (gtk_combo_box_get_active (widget) != 0) {
+    gchar *distro = gtk_combo_box_get_active_text(GTK_COMBO_BOX(widget));
     g_print ("You chose %s\n", distro);
     g_free (distro);
   }
+  */
 }
 
-
-static void
-activate (GtkApplication *app,
-          gpointer        user_data)
+int main(int argc, char *argv[])
 {
-  gint i;
-  GtkWidget *view;
-  GtkWidget *window;
-  GtkWidget *combo_box;
+  static GtkWidget *window = NULL;
+  GtkWidget *box, *combo;
+  GtkTreeModel *model;
+  GtkCellRenderer *renderer;
+  
+  gtk_init(&argc, &argv);
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
-  /* Create a window with a title, border width, and a default size. Setting the
-   * size to -1 means to use the "natural" default size.
-   * (the size request of the window)
-   */
-  window = gtk_application_window_new (app);
-  gtk_window_set_title (GTK_WINDOW (window), "Welcome to GNOME");
-  gtk_window_set_default_size (GTK_WINDOW (window), 200, -1);
-  gtk_container_set_border_width (GTK_CONTAINER (window), 10);
+  box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
+  gtk_container_set_border_width (GTK_CONTAINER (box), 10);
 
+  model = create_icon_store ();
+  
+  combo = gtk_combo_box_new_with_model (model);
+  
+  g_object_unref (model);
+  gtk_container_add (GTK_CONTAINER (box), combo);
 
-  /* Create the combo box and append your string values to it. */
-  combo_box = gtk_combo_box_text_new ();
-  const char *distros[] = {"Select distribution", "Fedora", "Mint", "Suse"};
+  renderer = gtk_cell_renderer_pixbuf_new ();
+  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);
+  gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo), renderer,
+                                  "icon-name", ICON_NAME_COL,
+                                  NULL);
 
-  /* G_N_ELEMENTS is a macro which determines the number of elements in an array.*/
-  for (i = 0; i < G_N_ELEMENTS (distros); i++){
-  	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo_box), distros[i]);
-  }
+  renderer = gtk_cell_renderer_text_new ();
+  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, TRUE);
+  gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo), renderer,
+                                  "text", TEXT_COL,
+                                  NULL);
 
-  /* Choose to set the first row as the active one by default, from the beginning */
-  gtk_combo_box_set_active (GTK_COMBO_BOX (combo_box), 0);
+  gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
+  g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(on_changed), model);
 
-  /* Connect the signal emitted when a row is selected to the appropriate
-   * callback function.
-   */
-  g_signal_connect (combo_box,
-                    "changed",
-                    G_CALLBACK (on_changed),
-                    NULL);
+  gtk_container_add(GTK_CONTAINER(window), box);
+  gtk_widget_show_all(window);
+  
+  gtk_main();
 
-  /* Add it to the window */
-  gtk_container_add (GTK_CONTAINER (window), combo_box);
-
-  gtk_widget_show_all (window);
-}
-
-
-int
-main (int argc, char **argv)
-{
-  GtkApplication *app;
-  int status;
-
-  app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
-  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
-  status = g_application_run (G_APPLICATION (app), argc, argv);
-  g_object_unref (app);
-
-  return status;
+  return 0;
 }
