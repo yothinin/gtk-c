@@ -44,21 +44,22 @@ create_icon_store (void)
   return GTK_TREE_MODEL (store);
 }
 
-static void
-on_changed (GtkComboBox *widget,
-            gpointer   user_data)
-{
+void on_changed(GtkWidget *widget, gpointer user_data){
+  GtkTreeModel *model;
+  GtkTreeIter iter;
+  gchar *value;
   
+  //get model and iter.
+  model = gtk_combo_box_get_model(GTK_COMBO_BOX(widget));
+  gtk_combo_box_get_active_iter(GTK_COMBO_BOX(widget), &iter);
   
+  //get active id from combobox.
+  gint active_id = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
+  //get value from combobox.
+  gtk_tree_model_get(model, &iter, TEXT_COL, &value, -1);
   
-  //GtkComboBox *combo_box = widget;
-  /*
-  if (gtk_combo_box_get_active (widget) != 0) {
-    gchar *distro = gtk_combo_box_get_active_text(GTK_COMBO_BOX(widget));
-    g_print ("You chose %s\n", distro);
-    g_free (distro);
-  }
-  */
+  g_print("active_id = %d, value = %s\n", active_id, value);
+  g_free(value);    
 }
 
 int main(int argc, char *argv[])
@@ -75,26 +76,27 @@ int main(int argc, char *argv[])
   gtk_container_set_border_width (GTK_CONTAINER (box), 10);
 
   model = create_icon_store ();
-  
   combo = gtk_combo_box_new_with_model (model);
   
   g_object_unref (model);
   gtk_container_add (GTK_CONTAINER (box), combo);
-
+  
+  //render pixbuf to draw icon.
   renderer = gtk_cell_renderer_pixbuf_new ();
   gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);
   gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo), renderer,
                                   "icon-name", ICON_NAME_COL,
                                   NULL);
 
+  //render text to display label.
   renderer = gtk_cell_renderer_text_new ();
   gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, TRUE);
   gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo), renderer,
                                   "text", TEXT_COL,
                                   NULL);
-
+  
   gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
-  g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(on_changed), model);
+  g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(on_changed), NULL);
 
   gtk_container_add(GTK_CONTAINER(window), box);
   gtk_widget_show_all(window);
